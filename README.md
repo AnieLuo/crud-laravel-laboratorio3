@@ -1,61 +1,156 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LABORATORIO N°3 - CRUD CON LARAVEL
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## INTRODUCCIÓN
 
-## About Laravel
+Este laboratorio tuvo como objetivo implementar un sistema CRUD (Create, Read, Update, Delete) completo en Laravel para la gestión de productos. Se trabajó con el generador de código `ibex/crud-generator` para automatizar la creación de controladores, vistas, modelos y rutas, aplicando los conceptos fundamentales del patrón Modelo-Vista-Controlador (MVC) en el framework Laravel.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+El CRUD implementado permite:
+- **Crear** nuevos productos con descripción, precio y stock
+- **Listar** todos los productos existentes
+- **Visualizar** detalles de productos específicos
+- **Editar** información de productos
+- **Eliminar** productos del sistema
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## REQUISITOS PREVIOS
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Para ejecutar este proyecto, se requiere el siguiente ecosistema de desarrollo:
 
-## Learning Laravel
+- **PHP 8.2.26** o superior
+- **Composer** (última versión estable)
+- **Laravel 12.5.0**
+- **Servidor local:** WampServer
+- **Base de datos:** MySQL (phpMyAdmin)
+- **Editor:** Visual Studio Code
+- **Node.js y npm** (para compilación de assets front-end)
+- **Sistema operativo:** Windows 10/11
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## DEPENDENCIAS Y COMANDOS PRINCIPALES
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+# Creación del proyecto
+composer create-project laravel/laravel crud_rapido
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Configuración de entorno
+php artisan key:generate
 
-## Laravel Sponsors
+# Configuración de base de datos (modificar .env)
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=crud_rapido
+DB_USERNAME=root
+DB_PASSWORD=
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Creación de modelo y migración
+php artisan make:model Product -m
 
-### Premium Partners
+# Ejecución de migraciones
+php artisan migrate:fresh
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Instalación del generador CRUD
+composer require ibex/crud-generator --dev
+php artisan vendor:publish --tag=crud
+php artisan make:crud products
 
-## Contributing
+# Instalación de UI y assets
+composer require laravel/ui --dev
+php artisan ui bootstrap
+npm install
+npm run dev
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Ejecución del servidor
+php artisan serve
 
-## Code of Conduct
+```
+## FLUJO DE TRABAJO DEL LABORATORIO
+- **Configuración** inicial del proyecto Laravel y entorno de desarrollo
+- **Configuración** de base de datos en archivo .env
+- **Creación** del modelo Product con migración correspondiente
+- **Protección** contra asignación masiva usando $fillable
+- **Generación** automática de recursos CRUD con ibex/crud-generator
+- **Configuración** de rutas para operaciones CRUD
+- **Instalación** y compilación de assets front-end
+- **Solución** de errores y despliegue final
+- 
+## BASE DE DATOS
+Estructura de la tabla products
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+CREATE TABLE products (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255) NOT NULL,
+    price DECIMAL(8,2) NOT NULL,
+    stock INTEGER NOT NULL,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
+);
+```
+## Migración aplicada
+```
+public function up(): void
+{
+    Schema::create('products', function (Blueprint $table) {
+        $table->id();
+        $table->string('description');
+        $table->decimal('price', 8, 2);
+        $table->integer('stock');
+        $table->timestamps();
+    });
+}
+```
+## RESULTADOS OBTENIDOS
+El sistema implementado permite:
 
-## Security Vulnerabilities
+✅ Crear productos con validación de datos
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+✅ Listar productos en interfaz tabular
 
-## License
+✅ Editar productos existentes
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+✅ Eliminar productos con confirmación
+
+✅ Persistencia de datos en base de datos MySQL
+
+✅ Navegación completa entre vistas CRUD
+
+## Evidencia de funcionamiento:
+<img width="1036" height="288" alt="image" src="https://github.com/user-attachments/assets/e8e1940c-1372-4164-8e4c-9151d15a23af" />
+<img width="1021" height="378" alt="image" src="https://github.com/user-attachments/assets/65f323ba-1ccc-4915-91de-7d90353baec7" />
+<img width="1054" height="326" alt="image" src="https://github.com/user-attachments/assets/f3e86cc6-6e23-4831-9acb-800900310dba" />
+<img width="776" height="123" alt="image" src="https://github.com/user-attachments/assets/b86ea615-b8ca-4b50-9110-0ad6494da9ca" />
+
+- **Producto** "Clavo" creado exitosamente con precio $0.50 y stock 50
+- **Datos** persistentes verificados en phpMyAdmin
+- **Operaciones** CRUD completamente funcionales
+
+## REFERENCIAS
+- **Documentación** Oficial de Laravel
+- **ibex/crud-generator** Documentation
+- **Laravel** UI Package
+- **Stack** Overflow - Laravel Issues
+
+## INFORMACIÓN DEL DESARROLLADOR
+Estudiante: Anie Luo
+
+Correo: anie.luo@utp.ac.pa
+
+Grupo: 1SF131
+
+Curso: Ingeniería Web
+
+Facilitadora: Irina Fong
+
+Universidad: Universidad Tecnológica de Panamá
+
+Facultad: Ingeniería en Sistemas Computacionales
+
+Licenciatura: Ingeniería de Software
+
+
+## FECHAS
+Fecha de ejecución: Octubre 2025
+
+Fecha de entrega: 6 de Octubre 2025
+
+II Semestre 2025
+
